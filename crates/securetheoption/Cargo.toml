@@ -1,0 +1,23 @@
+[package]
+name = "securetheoption"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Presigned option-mint offers for Chia: quote offline, publish an offer, mint on accept."
+
+[dependencies]
+chia-wallet-sdk = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+hex = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+anyhow = { workspace = true }
+
+# The simulator tests build the taker's half with `Spends::finish_with_keys`, which takes an
+# `IndexMap` of synthetic keys, and `chia-wallet-sdk` re-exports the simulator but not that map.
+# This is the version the SDK's own workspace requires, so one `indexmap` is compiled for both trees.
+indexmap = "2.11.4"

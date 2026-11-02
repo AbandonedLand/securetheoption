@@ -1,0 +1,22 @@
+[package]
+name = "securetheoption-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Command line tools for presigned option-mint offers: quote, seal, verify."
+
+[[bin]]
+name = "securetheoption"
+path = "src/main.rs"
+
+# Deliberately no `tokio` and no coinset client: every command is offline, and the SDK's client
+# dependencies never reach this crate's code (Verification Note 10).
+[dependencies]
+securetheoption = { workspace = true }
+chia-wallet-sdk = { workspace = true }
+anyhow = { workspace = true }
+clap = { workspace = true }
+hex = { workspace = true }
+serde_json = { workspace = true }

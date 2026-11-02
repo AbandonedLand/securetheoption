@@ -1,0 +1,5 @@
+# Rust build artifacts
+/target
+
+# RPIV agent scratch / artifacts (local plans, designs, livetest output)
+/.rpiv

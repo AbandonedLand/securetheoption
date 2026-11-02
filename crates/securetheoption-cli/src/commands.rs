@@ -330,9 +330,12 @@ fn emit_unsigned(
 fn print_report(report: &VerifyReport, network: Network) -> Result<()> {
     let terms = &report.quote.terms;
 
-    let recipient = Address::new(terms.premium_recipient()?, network.address_prefix().to_string())
-        .encode()
-        .context("failed to render the premium recipient as an address")?;
+    let recipient = Address::new(
+        terms.premium_recipient()?,
+        network.address_prefix().to_string(),
+    )
+    .encode()
+    .context("failed to render the premium recipient as an address")?;
 
     println!("Quote valid.");
     println!(

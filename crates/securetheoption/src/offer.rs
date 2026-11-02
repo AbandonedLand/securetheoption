@@ -106,9 +106,7 @@ impl QuoteSidecar {
                 launcher_coin_id: hex_id(quote.launcher_coin.coin_id().to_bytes()),
                 launcher_id: hex_id(quote.launcher_id.to_bytes()),
                 underlying_coin_id: hex_id(quote.underlying_coin.coin_id().to_bytes()),
-                underlying_p2_puzzle_hash: hex_id(
-                    quote.underlying_p2_puzzle_hash().to_bytes(),
-                ),
+                underlying_p2_puzzle_hash: hex_id(quote.underlying_p2_puzzle_hash().to_bytes()),
                 underlying_delegated_puzzle_hash: hex_id(
                     quote.info.underlying_delegated_puzzle_hash.to_bytes(),
                 ),
@@ -117,7 +115,9 @@ impl QuoteSidecar {
                 option_coin_id: hex_id(quote.option_coin.coin_id().to_bytes()),
                 option_puzzle_hash: hex_id(quote.option_puzzle_hash().to_bytes()),
                 premium_nonce: hex_id(quote.nonce.to_bytes()),
-                premium_payment_hash: hex_id(Bytes32::from(quote.premium_payment_hash()?).to_bytes()),
+                premium_payment_hash: hex_id(
+                    Bytes32::from(quote.premium_payment_hash()?).to_bytes(),
+                ),
             },
         })
     }
@@ -246,12 +246,8 @@ pub fn seal(
     let requested_payments = quote.requested_payments(&mut ctx)?;
     let asset_info = quote.asset_info()?;
 
-    let offer = Offer::from_input_spend_bundle(
-        &mut ctx,
-        signed.clone(),
-        requested_payments,
-        asset_info,
-    )?;
+    let offer =
+        Offer::from_input_spend_bundle(&mut ctx, signed.clone(), requested_payments, asset_info)?;
 
     // An offer that does not register the option offers nothing, and would fail at take time rather
     // than here. The parser only recognises an odd-amount child whose inner p2 is the settlement
@@ -500,10 +496,9 @@ mod tests {
         let parent_parent_coin_info = Bytes32::new([2; 32]);
         let parent_inner_puzzle_hash = Bytes32::new([3; 32]);
         let parent_amount = 5_000;
-        let parent_puzzle_hash: Bytes32 =
-            CatInfo::new(asset_id, None, parent_inner_puzzle_hash)
-                .puzzle_hash()
-                .into();
+        let parent_puzzle_hash: Bytes32 = CatInfo::new(asset_id, None, parent_inner_puzzle_hash)
+            .puzzle_hash()
+            .into();
         let parent_coin_id =
             Coin::new(parent_parent_coin_info, parent_puzzle_hash, parent_amount).coin_id();
 
@@ -583,7 +578,10 @@ mod tests {
         tampered.coin_spends[0].solution = Program::from(vec![0x80]);
 
         let error = seal(&quote, &tampered, OfferFormat::Offer).unwrap_err();
-        assert!(matches!(error, SecError::SealedBundleMismatch(_)), "{error}");
+        assert!(
+            matches!(error, SecError::SealedBundleMismatch(_)),
+            "{error}"
+        );
         assert!(error.to_string().contains("solution"), "{error}");
 
         Ok(())
@@ -593,11 +591,13 @@ mod tests {
     fn seal_refuses_a_bundle_with_a_foreign_coin() -> anyhow::Result<()> {
         let quote = Quote::new(xch_terms(1_000))?;
         let mut tampered = signed(&quote)?;
-        tampered.coin_spends[0].coin =
-            Coin::new(Bytes32::new([42; 32]), Bytes32::new([42; 32]), 7);
+        tampered.coin_spends[0].coin = Coin::new(Bytes32::new([42; 32]), Bytes32::new([42; 32]), 7);
 
         let error = seal(&quote, &tampered, OfferFormat::Offer).unwrap_err();
-        assert!(matches!(error, SecError::SealedBundleMismatch(_)), "{error}");
+        assert!(
+            matches!(error, SecError::SealedBundleMismatch(_)),
+            "{error}"
+        );
         assert!(error.to_string().contains("spends coin"), "{error}");
 
         Ok(())
@@ -610,7 +610,10 @@ mod tests {
         tampered.coin_spends.pop();
 
         let error = seal(&quote, &tampered, OfferFormat::Offer).unwrap_err();
-        assert!(matches!(error, SecError::SealedBundleMismatch(_)), "{error}");
+        assert!(
+            matches!(error, SecError::SealedBundleMismatch(_)),
+            "{error}"
+        );
         assert!(error.to_string().contains("coin spends"), "{error}");
 
         Ok(())
@@ -754,7 +757,10 @@ mod tests {
         // the parsed offer's bundle is the maker's half alone: it removes exactly what it creates, and
         // the premium shows up as a request rather than as a hole in `fee()`.
         assert_eq!(offer.fee()?, 0);
-        assert_eq!(requested.xch[0].payments[0].amount, quote.terms.premium.amount);
+        assert_eq!(
+            requested.xch[0].payments[0].amount,
+            quote.terms.premium.amount
+        );
 
         Ok(())
     }
@@ -820,7 +826,10 @@ mod tests {
         let quote = Quote::new(xch_terms(1_000))?;
         let sealed = seal(&quote, &signed(&quote)?, OfferFormat::Offer)?;
 
-        assert_eq!(QuoteSidecar::from_json(sealed.sidecar_text())?, sealed.sidecar);
+        assert_eq!(
+            QuoteSidecar::from_json(sealed.sidecar_text())?,
+            sealed.sidecar
+        );
 
         Ok(())
     }

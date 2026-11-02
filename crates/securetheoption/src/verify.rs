@@ -187,11 +187,7 @@ struct Found {
 ///
 /// The sidecar exists so a taker can compare its own recompute instead of trusting the offer's
 /// reveals, which only works if the claims are checked rather than read.
-fn check_derived(
-    errors: &mut Vec<String>,
-    claimed: &DerivedIds,
-    quote: &Quote,
-) {
+fn check_derived(errors: &mut Vec<String>, claimed: &DerivedIds, quote: &Quote) {
     check_id(
         errors,
         "launcher_parent_coin_id",
@@ -204,7 +200,12 @@ fn check_derived(
         &claimed.launcher_coin_id,
         quote.launcher_coin.coin_id(),
     );
-    check_id(errors, "launcher_id", &claimed.launcher_id, quote.launcher_id);
+    check_id(
+        errors,
+        "launcher_id",
+        &claimed.launcher_id,
+        quote.launcher_id,
+    );
     check_id(
         errors,
         "underlying_coin_id",
@@ -300,7 +301,8 @@ fn check_option(errors: &mut Vec<String>, offer: &Offer, quote: &Quote) {
         errors.push(format!(
             "the offer's option delegates to {}, but the terms derive {}: the strike or the \
              underlying differs from what the sidecar says",
-            option.info.underlying_delegated_puzzle_hash, quote.info.underlying_delegated_puzzle_hash
+            option.info.underlying_delegated_puzzle_hash,
+            quote.info.underlying_delegated_puzzle_hash
         ));
     }
 
@@ -560,10 +562,9 @@ mod tests {
         let parent_parent_coin_info = Bytes32::new([2; 32]);
         let parent_inner_puzzle_hash = Bytes32::new([3; 32]);
         let parent_amount = 5_000;
-        let parent_puzzle_hash: Bytes32 =
-            CatInfo::new(asset_id, None, parent_inner_puzzle_hash)
-                .puzzle_hash()
-                .into();
+        let parent_puzzle_hash: Bytes32 = CatInfo::new(asset_id, None, parent_inner_puzzle_hash)
+            .puzzle_hash()
+            .into();
         let parent_coin_id =
             Coin::new(parent_parent_coin_info, parent_puzzle_hash, parent_amount).coin_id();
 
@@ -639,7 +640,9 @@ mod tests {
         assert_eq!(report.modeled.take_by, quote.terms.take_by_seconds);
         assert_eq!(
             report.modeled.premium_assertion,
-            quote.premium_assertion(&mut SpendContext::new())?.announcement_id
+            quote
+                .premium_assertion(&mut SpendContext::new())?
+                .announcement_id
         );
         assert_eq!(
             report.metadata.expiration_seconds,
@@ -700,7 +703,9 @@ mod tests {
 
         let error = verify(&foreign.spend_bundle, &sidecar).unwrap_err();
         assert!(
-            error.to_string().contains("does not offer the quoted option"),
+            error
+                .to_string()
+                .contains("does not offer the quoted option"),
             "{error}"
         );
 
@@ -807,7 +812,9 @@ mod tests {
 
         assert_eq!(report.unmodeled_conditions.len(), 1);
         assert!(
-            report.unmodeled_conditions[0].condition.contains("ReserveFee"),
+            report.unmodeled_conditions[0]
+                .condition
+                .contains("ReserveFee"),
             "{:?}",
             report.unmodeled_conditions[0]
         );

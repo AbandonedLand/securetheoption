@@ -162,9 +162,9 @@ checksum = "2af50177e190e07a26ab74f8b1efbfe2ef87da2116221318cb1c2e82baf7de06"
 
 [[package]]
 name = "bech32"
-version = "0.12.0"
+version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "efbd3e1070bbdf4cd88a75264e18e8a26f7cb5c6949eadf0ceb85fb159cf08f8"
+checksum = "d86b93f97252c47b41663388e6d155714a9d0c398b99f1005cbc5f978b29f445"
 
 [[package]]
 name = "binascii"
@@ -194,9 +194,9 @@ dependencies = [
 
 [[package]]
 name = "bip39"
-version = "3.0.0"
+version = "2.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4559bb9225f8401dcea601cf8dc9ed81ea0dadd9cf7755fdefdd93ef7961e19e"
+checksum = "90dbd31c98227229239363921e60fcf5e558e43ec69094d46fc4996f08d1d5bc"
 dependencies = [
  "bitcoin_hashes",
  "serde",
@@ -424,6 +424,8 @@ dependencies = [
 [[package]]
 name = "chia-sdk-client"
 version = "0.37.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f072cb4351dacfd3892f557be48d9959cf5462324f56f04d5cdaef597e421be6"
 dependencies = [
  "chia-protocol",
  "chia-sdk-types",
@@ -440,6 +442,8 @@ dependencies = [
 [[package]]
 name = "chia-sdk-coinset"
 version = "0.37.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7d92ff2de87b6be5d4fdb76c1734c29c42d95748f1190524f7d5a6b0dd6ccc2e"
 dependencies = [
  "chia-protocol",
  "hex",
@@ -452,6 +456,8 @@ dependencies = [
 [[package]]
 name = "chia-sdk-daemon"
 version = "0.37.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3d12320724e63950a3581641d547d3fa9cfd3eb9adf96803c4abf1f7a9e6b206"
 dependencies = [
  "chia-sdk-client",
  "chia-sdk-coinset",
@@ -468,15 +474,19 @@ dependencies = [
 [[package]]
 name = "chia-sdk-derive"
 version = "0.37.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "658512e87af441d5d505579cd8c0b9c55f2ef3dfb2baecc8fbc9e2893cbeacf7"
 dependencies = [
  "convert_case 0.12.0",
  "quote",
- "syn 3.0.9",
+ "syn 2.0.119",
 ]
 
 [[package]]
 name = "chia-sdk-driver"
 version = "0.37.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e65f53744e8d3ae2e84c622cda6c78b7651cb54d02e73c32f094dd31f0c84fb0"
 dependencies = [
  "bip39",
  "chia-bls 0.52.1",
@@ -507,6 +517,8 @@ dependencies = [
 [[package]]
 name = "chia-sdk-signer"
 version = "0.37.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ffc91b6e67e511ac978fcd9590d4843d042994ce3d98df4f095e7f493b7d6f06"
 dependencies = [
  "chia-bls 0.52.1",
  "chia-consensus",
@@ -526,6 +538,8 @@ dependencies = [
 [[package]]
 name = "chia-sdk-test"
 version = "0.37.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fba71fc610bb3b73af9c42b017cd0fb288d9ce0c6c964404dd38c7a0f4df9b4e"
 dependencies = [
  "anyhow",
  "bincode",
@@ -547,8 +561,8 @@ dependencies = [
  "hex-literal 1.1.0",
  "indexmap",
  "prettytable-rs",
- "rand 0.10.3",
- "rand_chacha 0.10.0",
+ "rand 0.9.5",
+ "rand_chacha",
  "serde",
  "serde_json",
  "thiserror 2.0.21",
@@ -557,6 +571,8 @@ dependencies = [
 [[package]]
 name = "chia-sdk-types"
 version = "0.37.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fb352ee44df6c363ea3c1a9a3bc48f8ea8e3435c8c9d0c2ae99de294ca93a3e4"
 dependencies = [
  "chia-bls 0.52.1",
  "chia-consensus",
@@ -581,13 +597,15 @@ dependencies = [
 [[package]]
 name = "chia-sdk-utils"
 version = "0.37.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "baabfa0974d9b5ff332614c7db3ae6607f79c3f9669b38e6cab4295f37a5b557"
 dependencies = [
  "bech32",
  "chia-protocol",
  "hex",
  "indexmap",
- "rand 0.10.3",
- "rand_chacha 0.10.0",
+ "rand 0.9.5",
+ "rand_chacha",
  "thiserror 2.0.21",
 ]
 
@@ -669,6 +687,8 @@ dependencies = [
 [[package]]
 name = "chia-wallet-sdk"
 version = "0.37.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0d4cc5fc0f1c292e6b78d123346a8d03a95d296be3819b596facac0fb2879504"
 dependencies = [
  "chia-bls 0.52.1",
  "chia-consensus",
@@ -2317,8 +2337,9 @@ version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b9ef1d0d795eb7d84685bca4f72f3649f064e6641543d3a8c415898726a57b41"
 dependencies = [
- "rand_chacha 0.9.0",
+ "rand_chacha",
  "rand_core 0.9.5",
+ "serde",
 ]
 
 [[package]]
@@ -2330,7 +2351,6 @@ dependencies = [
  "chacha20",
  "getrandom 0.4.3",
  "rand_core 0.10.1",
- "serde",
 ]
 
 [[package]]
@@ -2341,16 +2361,6 @@ checksum = "d3022b5f1df60f26e1ffddd6c66e8aa15de382ae63b3a0c1bfc0e4d3e3f325cb"
 dependencies = [
  "ppv-lite86",
  "rand_core 0.9.5",
-]
-
-[[package]]
-name = "rand_chacha"
-version = "0.10.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3e6af7f3e25ded52c41df4e0b1af2d047e45896c2f3281792ed68a1c243daedb"
-dependencies = [
- "ppv-lite86",
- "rand_core 0.10.1",
  "serde",
 ]
 
@@ -2361,6 +2371,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "76afc826de14238e6e8c374ddcc1fa19e374fd8dd986b0d2af0d02377261d83c"
 dependencies = [
  "getrandom 0.3.4",
+ "serde",
 ]
 
 [[package]]

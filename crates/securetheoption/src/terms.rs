@@ -40,7 +40,8 @@ impl Hex {
             .or_else(|| self.0.strip_prefix("0X"))
             .unwrap_or(self.0.as_str());
 
-        let decoded = hex::decode(trimmed).map_err(|error| SecError::hex(field, error.to_string()))?;
+        let decoded =
+            hex::decode(trimmed).map_err(|error| SecError::hex(field, error.to_string()))?;
         let len = decoded.len();
 
         decoded
@@ -60,7 +61,10 @@ impl Hex {
             .map_err(|error| SecError::hex(field, error.to_string()))?;
 
         if public_key.is_inf() {
-            return Err(SecError::hex(field, "the point at infinity is not a usable key"));
+            return Err(SecError::hex(
+                field,
+                "the point at infinity is not a usable key",
+            ));
         }
 
         Ok(public_key)
@@ -281,7 +285,9 @@ impl QuoteTerms {
 
     /// The maker's standard-layer puzzle hash: where the backing coin must live and where change goes.
     pub fn maker_puzzle_hash(&self) -> Result<Bytes32, SecError> {
-        Ok(StandardLayer::new(self.maker_public_key()?).tree_hash().into())
+        Ok(StandardLayer::new(self.maker_public_key()?)
+            .tree_hash()
+            .into())
     }
 
     /// Parses the creator puzzle hash.
@@ -370,8 +376,7 @@ impl QuoteTerms {
         match &self.premium.asset {
             PremiumAsset::Xch => Ok(None),
             PremiumAsset::Cat {
-                hidden_puzzle_hash,
-                ..
+                hidden_puzzle_hash, ..
             } => hidden_puzzle_hash
                 .as_ref()
                 .map(|hidden| hidden.bytes32("premium.asset.hidden_puzzle_hash"))
@@ -405,15 +410,21 @@ impl QuoteTerms {
         }
 
         if self.underlying_amount == 0 {
-            return Err(SecError::terms("`underlying_amount` must be greater than zero"));
+            return Err(SecError::terms(
+                "`underlying_amount` must be greater than zero",
+            ));
         }
 
         if self.strike.amount() == 0 {
-            return Err(SecError::terms("the strike amount must be greater than zero"));
+            return Err(SecError::terms(
+                "the strike amount must be greater than zero",
+            ));
         }
 
         if self.expiry_seconds == 0 {
-            return Err(SecError::terms("`expiry_seconds` must be greater than zero"));
+            return Err(SecError::terms(
+                "`expiry_seconds` must be greater than zero",
+            ));
         }
 
         if self.take_by_seconds == 0 {
@@ -429,7 +440,11 @@ impl QuoteTerms {
         }
     }
 
-    fn validate_xch(&self, backing_coin: &Coin, maker_puzzle_hash: Bytes32) -> Result<(), SecError> {
+    fn validate_xch(
+        &self,
+        backing_coin: &Coin,
+        maker_puzzle_hash: Bytes32,
+    ) -> Result<(), SecError> {
         if backing_coin.puzzle_hash != maker_puzzle_hash {
             return Err(SecError::terms(format!(
                 "the XCH backing coin's puzzle hash {} is not the maker's standard-layer puzzle \
@@ -465,7 +480,11 @@ impl QuoteTerms {
         Ok(())
     }
 
-    fn validate_cat(&self, backing_coin: &Coin, maker_puzzle_hash: Bytes32) -> Result<(), SecError> {
+    fn validate_cat(
+        &self,
+        backing_coin: &Coin,
+        maker_puzzle_hash: Bytes32,
+    ) -> Result<(), SecError> {
         let cat = self
             .backing_cat()?
             .ok_or_else(|| SecError::terms("a CAT backing coin is required here"))?;
@@ -641,7 +660,10 @@ mod tests {
         let mut terms = cat_terms();
         terms.launcher_coin.as_mut().expect("launcher").amount = 2;
         let error = terms.validate().unwrap_err();
-        assert!(error.to_string().contains("cannot return change"), "{error}");
+        assert!(
+            error.to_string().contains("cannot return change"),
+            "{error}"
+        );
         Ok(())
     }
 

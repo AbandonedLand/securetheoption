@@ -8,6 +8,9 @@
 use anyhow::{Context, Result};
 use chia_wallet_sdk::driver::decode_offer;
 use chia_wallet_sdk::prelude::*;
+// `SecpPublicKey` sits at the root of `chia-sdk-signer`, which `chia-wallet-sdk` re-exports as
+// `signer`. The 0.37.1 prelude omits it, so it has to be named by its module path.
+use chia_wallet_sdk::signer::SecpPublicKey;
 use securetheoption::{
     DerivedIds, OfferFormat, Quote, QuoteSidecar, spend_bundle_from_json, spend_bundle_json,
 };
@@ -183,8 +186,10 @@ mod tests {
     /// The bundle an external signer would return: the maker's spends carrying a real signature.
     fn signed(bundle: &SpendBundle) -> SpendBundle {
         let mut signed = bundle.clone();
-        signed.aggregated_signature =
-            sign(&SecretKey::from_seed(&[7; 32]), b"securetheoption cli fixture");
+        signed.aggregated_signature = sign(
+            &SecretKey::from_seed(&[7; 32]),
+            b"securetheoption cli fixture",
+        );
 
         signed
     }
@@ -232,7 +237,8 @@ mod tests {
         let bundle = build_maker_bundle(&quote)?;
 
         // The shape `create` emits and an external signer consumes.
-        let wrapped = serde_json::to_string(&unsigned_document(&quote, &bundle, Network::Mainnet)?)?;
+        let wrapped =
+            serde_json::to_string(&unsigned_document(&quote, &bundle, Network::Mainnet)?)?;
         assert_eq!(spend_bundle_from_text(&wrapped)?, bundle);
 
         // The shape the signer writes back: the bare bundle.

@@ -218,10 +218,9 @@ mod tests {
         let parent_parent_coin_info = Bytes32::new([2; 32]);
         let parent_inner_puzzle_hash = Bytes32::new([3; 32]);
         let parent_amount = 5_000;
-        let parent_puzzle_hash: Bytes32 =
-            CatInfo::new(asset_id, None, parent_inner_puzzle_hash)
-                .puzzle_hash()
-                .into();
+        let parent_puzzle_hash: Bytes32 = CatInfo::new(asset_id, None, parent_inner_puzzle_hash)
+            .puzzle_hash()
+            .into();
         let parent_coin_id =
             Coin::new(parent_parent_coin_info, parent_puzzle_hash, parent_amount).coin_id();
 
@@ -439,7 +438,9 @@ mod tests {
             .collect();
         assert_eq!(
             deadlines,
-            vec![AssertBeforeSecondsAbsolute::new(quote.terms.take_by_seconds)]
+            vec![AssertBeforeSecondsAbsolute::new(
+                quote.terms.take_by_seconds
+            )]
         );
 
         let announcements = conditions
@@ -452,13 +453,11 @@ mod tests {
         // cancels the offer, so it is the only one that has to be bound to the premium.
         for coin in [quote.launcher_coin, quote.eve_coin] {
             let conditions = spend_conditions(&mut allocator, spend_for(&bundle, coin))?;
-            assert!(
-                conditions.iter().all(|condition| condition
-                    .as_assert_puzzle_announcement()
-                    .is_none()
+            assert!(conditions.iter().all(|condition| {
+                condition.as_assert_puzzle_announcement().is_none()
                     && condition.as_assert_before_seconds_absolute().is_none()
-                    && condition.as_assert_coin_announcement().is_none())
-            );
+                    && condition.as_assert_coin_announcement().is_none()
+            }));
         }
 
         Ok(())
@@ -564,7 +563,8 @@ mod tests {
         }
 
         Ok(())
-    }    #[test]
+    }
+    #[test]
     fn cat_bundle_spends_exactly_the_four_coins() -> anyhow::Result<()> {
         let quote = Quote::new(cat_terms())?;
         let bundle = build_maker_bundle(&quote)?;
@@ -625,7 +625,10 @@ mod tests {
         let bundle = build_maker_bundle(&quote)?;
 
         let mut allocator = Allocator::new();
-        let created = created_coins(&mut allocator, spend_for(&bundle, quote.terms.backing_coin()?))?;
+        let created = created_coins(
+            &mut allocator,
+            spend_for(&bundle, quote.terms.backing_coin()?),
+        )?;
 
         assert_eq!(created.len(), 2);
 
@@ -656,7 +659,10 @@ mod tests {
         let bundle = build_maker_bundle(&quote)?;
 
         let mut allocator = Allocator::new();
-        let created = created_coins(&mut allocator, spend_for(&bundle, quote.terms.backing_coin()?))?;
+        let created = created_coins(
+            &mut allocator,
+            spend_for(&bundle, quote.terms.backing_coin()?),
+        )?;
 
         assert_eq!(created.len(), 1);
         assert_eq!(created[0].coin_id(), quote.underlying_coin.coin_id());
@@ -687,10 +693,10 @@ mod tests {
                 .count(),
             1
         );
-        assert!(conditions.iter().all(|condition| condition
-            .as_assert_puzzle_announcement()
-            .is_none()
-            && condition.as_assert_before_seconds_absolute().is_none()));
+        assert!(conditions.iter().all(|condition| {
+            condition.as_assert_puzzle_announcement().is_none()
+                && condition.as_assert_before_seconds_absolute().is_none()
+        }));
 
         Ok(())
     }
@@ -704,8 +710,10 @@ mod tests {
         let premium = quote.premium_assertion(&mut ctx)?;
 
         let mut allocator = Allocator::new();
-        let conditions =
-            spend_conditions(&mut allocator, spend_for(&bundle, quote.terms.backing_coin()?))?;
+        let conditions = spend_conditions(
+            &mut allocator,
+            spend_for(&bundle, quote.terms.backing_coin()?),
+        )?;
 
         let premiums: Vec<AssertPuzzleAnnouncement> = conditions
             .iter()
@@ -721,7 +729,9 @@ mod tests {
             .collect();
         assert_eq!(
             deadlines,
-            vec![AssertBeforeSecondsAbsolute::new(quote.terms.take_by_seconds)]
+            vec![AssertBeforeSecondsAbsolute::new(
+                quote.terms.take_by_seconds
+            )]
         );
 
         // The CAT layer adds its own ring announcement pair; the maker's conditions ride alongside
@@ -748,8 +758,10 @@ mod tests {
         let bundle = build_maker_bundle(&quote)?;
 
         let mut allocator = Allocator::new();
-        let conditions =
-            spend_conditions(&mut allocator, spend_for(&bundle, quote.terms.backing_coin()?))?;
+        let conditions = spend_conditions(
+            &mut allocator,
+            spend_for(&bundle, quote.terms.backing_coin()?),
+        )?;
         let floors: Vec<u64> = conditions
             .iter()
             .filter_map(Condition::as_reserve_fee)
@@ -797,7 +809,11 @@ mod tests {
 
         let mut expected = vec![
             quote.terms.backing_coin()?.coin_id(),
-            quote.terms.launcher_coin()?.expect("launcher coin").coin_id(),
+            quote
+                .terms
+                .launcher_coin()?
+                .expect("launcher coin")
+                .coin_id(),
         ];
         expected.sort();
 

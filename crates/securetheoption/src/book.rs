@@ -133,9 +133,7 @@ impl QuoteBook {
 
     /// The booked quotes, ordered by backing coin id.
     pub fn entries(&self) -> impl Iterator<Item = (&str, &QuoteEntry)> {
-        self.quotes
-            .iter()
-            .map(|(key, entry)| (key.as_str(), entry))
+        self.quotes.iter().map(|(key, entry)| (key.as_str(), entry))
     }
 
     /// How many quotes are booked.
@@ -374,7 +372,8 @@ mod tests {
 
     /// A book path under the OS temp directory, unique per test name and process.
     fn book_path(name: &str) -> PathBuf {
-        let dir = std::env::temp_dir().join(format!("securetheoption-{}-{name}", std::process::id()));
+        let dir =
+            std::env::temp_dir().join(format!("securetheoption-{}-{name}", std::process::id()));
 
         let _ = std::fs::remove_dir_all(&dir);
         std::fs::create_dir_all(&dir).expect("temp dir");
@@ -549,11 +548,11 @@ mod tests {
         let mut book = QuoteBook::load(&path)?;
         let error = book.requote(&quote).unwrap_err();
 
+        assert!(matches!(error, SecError::UnknownQuotedCoin(_)), "{error}");
         assert!(
-            matches!(error, SecError::UnknownQuotedCoin(_)),
-            "{error}"
+            !path.exists(),
+            "a refused re-quote must not create the book"
         );
-        assert!(!path.exists(), "a refused re-quote must not create the book");
 
         Ok(())
     }
@@ -587,10 +586,7 @@ mod tests {
         let mut book = book;
         let error = book.retire(Bytes32::new([42; 32])).unwrap_err();
 
-        assert!(
-            matches!(error, SecError::UnknownQuotedCoin(_)),
-            "{error}"
-        );
+        assert!(matches!(error, SecError::UnknownQuotedCoin(_)), "{error}");
 
         Ok(())
     }

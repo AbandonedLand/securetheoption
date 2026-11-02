@@ -199,7 +199,8 @@ impl Fixture {
 
         let deltas = spends.apply(&mut ctx, &offer.requested_payments().actions())?;
         let keys = IndexMap::from_iter([(self.taker.puzzle_hash, self.taker.pk)]);
-        let outputs = spends.finish_with_keys(&mut ctx, &deltas, Relation::AssertConcurrent, &keys)?;
+        let outputs =
+            spends.finish_with_keys(&mut ctx, &deltas, Relation::AssertConcurrent, &keys)?;
 
         let coin_spends = ctx.take();
         let signature = sign_transaction(&coin_spends, &[self.taker.sk.clone()])?;
@@ -277,8 +278,7 @@ fn a_quote_can_be_sealed_verified_and_taken() -> anyhow::Result<()> {
         quote.underlying_coin.coin_id()
     );
     assert_eq!(
-        option.info.underlying_delegated_puzzle_hash,
-        quote.info.underlying_delegated_puzzle_hash,
+        option.info.underlying_delegated_puzzle_hash, quote.info.underlying_delegated_puzzle_hash,
         "the option the taker received commits to the strike and underlying the quote derived"
     );
     assert_eq!(option.coin.amount, 1);

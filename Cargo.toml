@@ -7,14 +7,17 @@ version = "0.1.0"
 edition = "2024"
 license = "Apache-2.0"
 authors = ["Aaron Shaw"]
-repository = "https://github.com/xch-dev/securetheoption"
+repository = "https://github.com/AbandonedLand/securetheoption"
 
 # Dependency versions mirror `chia-wallet-sdk`'s own workspace pins (v0.37.1) so the two trees resolve
 # to the same protocol/CLVM crates. `chia-pos2` is deliberately left unpatched: the SDK's patch only
 # exists to make `chia-protocol` compile for WASM, and this workspace builds natively.
+#
+# `chia-wallet-sdk` resolves from crates.io rather than a sibling checkout, so a clone builds with no
+# external setup.
 [workspace.dependencies]
 securetheoption = { version = "0.1.0", path = "crates/securetheoption" }
-chia-wallet-sdk = { version = "0.37.1", path = "../chia-wallet-sdk", features = ["offer-compression"] }
+chia-wallet-sdk = { version = "0.37.1", features = ["offer-compression"] }
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
 hex = "0.4.3"
